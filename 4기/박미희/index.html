@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="title" content="PWACamp_week1_calc"/>
+	<meta name="Description" content="Vue로 구현하는 PWA캠프_1주차_숙제_계산기_박미희">
+	<style>
+		body { font-family: 맑은 고딕; font-size: 12px; }
+		input[type=text] {
+			width: 100%;
+			padding: 12px 20px;
+			margin: 8px 0;
+			box-sizing: border-box;
+		}
+		.result-container {
+			background-color: lightpink;
+			padding: 10px;
+			margin-top: 10px;
+			color: purple;
+			font-weight: bold;
+			font-size: 15px;
+		}
+		.header { }
+	</style>
+</head>
+<body>
+	<div class='pre-container'>
+		<div class='header'><h1>계산기</h1></div>
+		<input type="text" id="txtNum1" placeholder="정수 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' />
+		<input type="text" id="txtSign" placeholder="연산자 (+, -, *, /)" maxlength="1" />
+		<input type="text" id="txtNum2" placeholder="정수 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' />
+		<button type="button">계산하기</button>
+	</div>
+	<div class='result-container'>
+		<div class='result-text'>계산결과 : </div>
+	</div>
+
+<script>
+var add = function (a, b) { return Number(a) + Number(b); };
+var subtraction = function (a, b) { return Number(a) - Number(b); };
+var multiply = function (a, b) { return Number(a) * Number(b); };
+var division = function (a, b) { return Number(a) / Number(b); };
+
+document.querySelector('button').addEventListener('click', function(){
+	var sign = document.querySelector('#txtSign').value;
+	var num1 = document.querySelector('#txtNum1').value;
+	var num2 = document.querySelector('#txtNum2').value;
+
+	if(!onlySign(sign)) {
+		document.querySelector('.result-text').innerText = "연산자를 입력해 주세요 (+, -, *, /)";
+        document.querySelector('#txtSign').focus();
+		return false;
+	}
+	else {
+		document.querySelector('.result-text').innerText = '';
+		switch (sign) {
+			case '+' :
+				setResult(add(num1, num2));
+				break;
+			case '-' :
+				setResult(subtraction(num1, num2));
+				break;
+			case '*' :
+				setResult(multiply(num1, num2));
+				break;
+			case '/' :
+				setResult(division(num1, num2));
+				break;
+		}
+	}
+});
+function setResult(val){
+	if (val !== null && val !== undefined)
+        document.querySelector('.result-text').innerText = "계산결과 : " + numberWithCommas(val);
+}
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+function onlySign(val){
+	if (val === '+' ||  val === '-' || val === '*' || val === '/') {
+        return true;
+	}
+	else {
+        return false;
+	}
+}
+function onlyNumber(event){
+	event = event || window.event;
+	var keyID = (event.which) ? event.which : event.keyCode;
+	if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 9 ) 
+		return;
+	else
+		return false;
+}
+function removeChar(event) {
+	event = event || window.event;
+	var keyID = (event.which) ? event.which : event.keyCode;
+	if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 9 ) 
+		return;
+	else
+		event.target.value = event.target.value.replace(/[^0-9]/g, "");
+}
+</script>
+</body>
+</html>
